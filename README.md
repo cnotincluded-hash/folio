@@ -75,10 +75,6 @@ What's in the folder:
 
 **About the passcode.** The passcode stops someone opening your journal in Folio. The files themselves aren't encrypted, so anyone who can open the folder on your computer can read them. Keep the folder somewhere private if that matters to you.
 
-### Moving entries from the Claude version
-
-1. In Folio on Claude, go to **Settings → Back Up Everything** and save the file.
-2. In the desktop app, go to **Settings → Restore from Backup** and choose that file.
 
 ## Build it yourself
 
