@@ -1,0 +1,16 @@
+{
+  "name": "folio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Folio desktop app",
+  "scripts": {
+    "page": "node scripts/make-dist.mjs",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@fontsource/inter": "5.2.8",
+    "@tauri-apps/cli": "2.12.1"
+  }
+}

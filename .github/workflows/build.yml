@@ -1,0 +1,54 @@
+name: Build installers
+
+# Runs when you push a version tag (git tag v1.0.0 && git push --tags),
+# or by hand from the Actions tab ("Run workflow").
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            args: ''
+          - platform: macos-latest
+            # one .dmg that runs on both Apple Silicon and Intel Macs
+            args: '--target universal-apple-darwin'
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - run: npm ci
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: Folio v__VERSION__
+          releaseBody: |
+            Windows: download the .msi (or the -setup.exe) and run it.
+            Mac: download the .dmg, open it and drag Folio into Applications.
+            First launch on either system shows a warning because the app isn't signed; see the README for the one-time step.
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
